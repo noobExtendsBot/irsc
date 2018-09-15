@@ -1,0 +1,46 @@
+Kernel Synchronization
+Two main aspects of OS synchronization design are,
+(i) provide synchronization constructs for the user space processes and threads,
+(ii) meet the synchronization requirements of the
+OS software itself.  In this course, we will deal with the latter aspect.  However, user space
+synchronization is an interesting design question:  what kind of kernel support (if at all any)
+required  for  user-space  synchronization?   System  call  APIs  for  user-space  synchronization
+support is provided by
+futex
+construct in Linux kernel (See man pages).
+From the synchronization perspective of kernel code itself, following questions arise.
+1.  When and why locking is necessary?
+2.  Is it required in a uni-processor system?
+3.  How kernel synchronization different than user-space synchronization?
+Resources can be shared across multiple contexts like process context (in system call han-
+dlers), interrupt or bottom half contexts and kernel threads.  In such scenarios, synchroniza-
+tion requirements can be different.  Let us analyze the different setups and scenarios one by
+one.
+Uni-processor synchronization
+• A  system  with  single  CPU  can  execute  one  context  at  a  time.   So,  why  use  locks?
+Consider a scenario when P1 executing a system call S1 in kernel context gets switched
+by another process P2 who is also executing in kernel context and access shared state
+used in the implementation of S1.
+• Can we avoid locks?  If we disable preemption when executing system calls (a.k.a.  non-
+preemptable kernels), the context switch is avoided.
+• What about interrupts arising during the system call execution?  If there is a shared
+state  between  the  system  call  handler  and  interrupt  handler,  should  we  use  locks?
+Note that, interrupt handlers can not be switched out by process contexts.  As a result
+situation could arise.  What should be the solution?  Oops ...  we have to disable
+interrupts
+• What if a shared state is accessed by two different interrupt handlers?  Locking would
+not help...  interrupt disabling is required.
+To summarize, depending on the entities involved in access of shared state, a synchronization
+technique should be used.  It is advisable to use the lowest possible level of serialization for
+better  responsiveness  of  the  system.   For  example,  disabling  interrupts  implicitly  disables
+preemption,  but  results  in  possible  delay  in  interrupt  processing  and  should  be  avoided  if
+possible.
+Multi-processor synchronization
+Synchronization requirements in a multi-processor system becomes tricky.
+• With  shared  state  between  process  contexts  (syscall  handlers),  can  preemption  dis-
+abling work?  Obviously not, because another process can execute on another processor
+potentially accessing a shared resource.  Using locks becomes inevitable.
+• What  about  shared  state  between  process  context  and  an  interrupt  context?   Does
+interrupt  disabling  solve  the  problem?   Why  or  why  not?   A  processor  can  disable
+interrupts  on  the  local  processor  which  means  interrupts  can  be  serviced  on  other
+processors.  So, the solution is:  locking + local interrupt disabling
