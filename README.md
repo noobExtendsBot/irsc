@@ -8,3 +8,39 @@ The data extraction script generally performs three basic functions:
 * Removal of stop words
 * Stem the words
 * Generate a frequency table for stemmed words
+
+### Dependencies
+
+* pip3 install porter2stemmer
+* pip3 install -U nltk
+
+You are done with the dependencies but you still need to download dataset/models
+ for nltk. In your python interpreter do the following:
+
+ 		>> import nltk 
+ 		>> nltk.download('popular')
+
+Keyword `popular` will download the following resources:
+
+
+
+	gazetteers 
+	genesis    
+	gutenberg  
+	inaugural  
+	movie_reviews 
+	names		   
+	shakespeare   
+	stopwords     
+	treebank	   
+	twitter_samples 
+	omw  			
+	wordnet		
+	wordnet_ic		
+	words			
+	maxent_ne_chunker 
+	punkt				
+	snowball_data		
+	averaged_perceptron_tagger 
+      
+
