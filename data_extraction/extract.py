@@ -13,13 +13,14 @@ clean_words = list()
 stem_words_list = list()
 stem_words_set = set()
 dict_count = dict()
-
+file_name = sys.argv[1]
 
 # add words to the list_of_all_words
 
-def open_file(fileName):
+def open_file():
+    global file_name
     global list_of_all_words
-    with open(fileName) as f:
+    with open(file_name) as f:
         data = list(f)
     for line in data:
             temp = word_tokenize(line)
@@ -43,24 +44,18 @@ def remove_stop_words(filtered_words):
     global clean_words
     stop_words = set(stopwords.words("english"))                                                                         #load stopwords
     clean_words = list(filter(lambda x: x.lower() not in stop_words, filtered_words))
-    print("length of list before filtered_words", len(filtered_words))
-    print("length of list before after filtered_words", len(clean_words))
+    # print("length of list before filtered_words", len(filtered_words))
+    # print("length of list before after filtered_words", len(clean_words))
 
 
 #stem the words
 
 def stem_words(clean_words):
     global stem_words_list
-
-    print('''
-            Final List Of words after removal of stop words and
-            stemming
-            ''')
-
     for i in clean_words:
         stem_words_list.append(stem(i))
     stem_words_list = [x.lower() for x in stem_words_list]
-    print(stem_words_list)
+    # print(stem_words_list)
 
 #calculate the frequency table
 
@@ -77,12 +72,11 @@ def list_print():
     for key,val in dict_count.items():
         print("The count of ",key, " is ",val)
 
-fileName = sys.argv[1]
-print(fileName)
-open_file(fileName)
-print(list_of_all_words)
+
+open_file()
+# print(list_of_all_words)
 filter_words(list_of_all_words)
-print(filter_words)
+# print(filter_words)
 remove_stop_words(filtered_words)
 stem_words(clean_words)
 frequency_table(stem_words_list)
