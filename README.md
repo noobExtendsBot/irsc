@@ -43,4 +43,5 @@ Keyword `popular` will download the following resources:
 	snowball_data		
 	averaged_perceptron_tagger 
       
-
+### Usage
+	./extract.py filename.txt
