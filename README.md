@@ -1,5 +1,5 @@
 # IRSC (Information Retrieval and Search Engine)
-This repo constains few important scripts which implements the concepts of the Information Retrieval.
+This repo contains few important scripts which implements the concepts of the Information Retrieval.
 
 ## Data Extraction
 The data extraction script generally performs five basic functions:
