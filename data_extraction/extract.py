@@ -4,8 +4,14 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from stemming.porter2 import stem
 
+import nltk
 import sys
 import string
+
+
+# get the necessary data
+nltk.download('punkt')
+nltk.download('stopwords')
 
 list_of_all_words = list()
 filtered_words = list()
@@ -16,7 +22,6 @@ dict_count = dict()
 file_name = sys.argv[1]
 
 # add words to the list_of_all_words
-
 def open_file():
     global file_name
     global list_of_all_words
@@ -29,23 +34,19 @@ def open_file():
 
 
 # clean the list_of_all_words from punctuations
-
-
 def filter_words(list_of_all_words):
     global filtered_words
     filtered_words = list(filter(lambda x: x not in string.punctuation, list_of_all_words))
     # print("length of list before removing punctuation", len(list_of_all_words))
-    # print("length of list before after removal of punctuation", len(filtered_words))
+    
 
 
 #clean the filtered_words from the stop words
-
 def remove_stop_words(filtered_words):
     global clean_words
-    stop_words = set(stopwords.words("english"))                                                                         #load stopwords
+    #load stopwords
+    stop_words = set(stopwords.words("english"))
     clean_words = list(filter(lambda x: x.lower() not in stop_words, filtered_words))
-    # print("length of list before filtered_words", len(filtered_words))
-    # print("length of list before after filtered_words", len(clean_words))
 
 
 #stem the words
@@ -58,7 +59,6 @@ def stem_words(clean_words):
     # print(stem_words_list)
 
 #calculate the frequency table
-
 def frequency_table(stem_words_list):
     global dict_count
     stem_words_set = set(stem_words_list)
@@ -73,12 +73,12 @@ def list_print():
         print("The count of ",key, " is ",val)
 
 
-open_file()
-# print(list_of_all_words)
-filter_words(list_of_all_words)
-# print(filter_words)
-remove_stop_words(filtered_words)
-stem_words(clean_words)
-frequency_table(stem_words_list)
-list_print()
+if __name__ == '__main__':
+
+    open_file()
+    filter_words(list_of_all_words)
+    remove_stop_words(filtered_words)
+    stem_words(clean_words)
+    frequency_table(stem_words_list)
+    list_print()
 
